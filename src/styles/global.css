@@ -1,0 +1,199 @@
+
+/* =========================================
+   Engineering Portfolio — Global Design System
+   ========================================= */
+
+/* Light theme: aerospace technical */
+:root {
+  color-scheme: light;
+
+  --color-background: #f3f1eb;
+  --color-surface: #e9e7df;
+  --color-text: #252b26;
+  --color-text-muted: #666d65;
+  --color-accent: #647866;
+  --color-accent-hover: #485b4a;
+  --color-border: #d2d0c7;
+
+  --font-body: "Segoe UI", Arial, sans-serif;
+  --font-mono: "Cascadia Code", Consolas, monospace;
+
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.25rem;
+  --text-xl: 1.75rem;
+  --text-2xl: clamp(2rem, 5vw, 3.5rem);
+
+  --space-1: 0.5rem;
+  --space-2: 1rem;
+  --space-3: 1.5rem;
+  --space-4: 2rem;
+  --space-5: 3rem;
+  --space-6: 4rem;
+
+  --content-width: 1100px;
+  --reading-width: 720px;
+}
+
+/* Dark theme: mission systems */
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  --color-background: #171a20;
+  --color-surface: #22262e;
+  --color-text: #e7e9eb;
+  --color-text-muted: #a3a9b2;
+  --color-accent: #d59b54;
+  --color-accent-hover: #efb96f;
+  --color-border: #3b414b;
+}
+
+/* Predictable sizing */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  min-width: 320px;
+  background: var(--color-background);
+  scroll-behavior: smooth;
+  scroll-padding-top: var(--space-4);
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  background: var(--color-background);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Typography */
+h1,
+h2,
+h3,
+h4,
+p {
+  margin-top: 0;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  line-height: 1.2;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+}
+
+h1 {
+  font-size: var(--text-2xl);
+}
+
+h2 {
+  font-size: var(--text-xl);
+}
+
+h3 {
+  font-size: var(--text-lg);
+}
+
+p {
+  max-width: var(--reading-width);
+}
+
+small,
+.text-muted {
+  color: var(--color-text-muted);
+}
+
+code,
+pre,
+.font-mono {
+  font-family: var(--font-mono);
+}
+
+code {
+  font-size: 0.9em;
+}
+
+/* Links and controls */
+a {
+  color: var(--color-accent);
+  text-underline-offset: 0.2em;
+}
+
+a:hover {
+  color: var(--color-accent-hover);
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 4px;
+}
+
+/* Media */
+img,
+svg,
+video {
+  max-width: 100%;
+}
+
+img {
+  height: auto;
+}
+
+/* Shared layout utilities */
+.container {
+  width: min(
+    var(--content-width),
+    calc(100% - 2 * var(--space-3))
+  );
+  margin-inline: auto;
+}
+
+.reading-width {
+  max-width: var(--reading-width);
+}
+
+.eyebrow {
+  color: var(--color-text-muted);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.divider {
+  border: 0;
+  border-top: 1px solid var(--color-border);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
