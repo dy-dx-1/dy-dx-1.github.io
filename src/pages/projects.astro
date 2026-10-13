@@ -1,91 +1,18 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
 
-const projects = [
-  {
-    number: '01',
-    title: 'Collaborative Localization',
-    category: 'RESEARCH · EMBEDDED SYSTEMS',
-    description:
-      'Developing a distributed localization system combining UWB ranging, inertial measurements, and factor-graph optimization.',
-    tags: ['C++', 'IMU', 'UWB', 'GTSAM'],
-    image: null,
-  },
-  {
-    number: '02',
-    title: 'TDOA Localization for Bitcraze',
-    category: 'RESEARCH ASSISTANT · LOCALIZATION',
-    description:
-      'Developing a TDOA-based localization system for Bitcraze anchors and tags, from ranging measurements to position estimates.',
-    tags: ['Localization', 'Embedded Systems', 'TDOA'],
-    image: null,
-  },
-  {
-    number: '03',
-    title: 'Turbofan Vibration Analysis',
-    category: 'RESEARCH SCHOLARSHIP · SOFTWARE',
-    description:
-      'Developed a graphical interface to support vibration analysis of turbofan engines.',
-    tags: ['Python', 'Data Visualization', 'Vibration'],
-    image: null,
-  },
-  {
-    number: '04',
-    title: 'Motorized Standing Desk',
-    category: 'PERSONAL PROJECT · MECHATRONICS',
-    description:
-      'Exploring the conversion of a manually adjustable standing desk into a motorized system.',
-    tags: ['Mechanical Design', 'Electronics', 'Control'],
-    image: null,
-  },
-  {
-    number: '05',
-    title: 'Custom Rover Wheels',
-    category: 'POLYORBITE · MECHANICAL DESIGN',
-    description:
-      'Designing custom 3D-printed wheels for a rover, balancing geometry, manufacturability, and terrain performance.',
-    tags: ['CAD', '3D Printing', 'Robotics'],
-    image: null,
-  },
-  {
-    number: '06',
-    title: 'PowerUp Plane Reverse Engineering',
-    category: 'PERSONAL PROJECT · SYSTEMS',
-    description:
-      'Investigating a small PowerUp aircraft and developing a custom controller to understand and replace parts of its control system.',
-    tags: ['Reverse Engineering', 'Electronics', 'Control'],
-    image: null,
-  },
-  {
-    number: '07',
-    title: 'Turbojet Modal Analysis',
-    category: 'CAPSTONE · MECHANICAL ENGINEERING',
-    description:
-      'Collaborative modal analysis of a custom turbojet, investigating its dynamic response and vibration characteristics.',
-    tags: ['Modal Analysis', 'Dynamics', 'Team Design'],
-    image: null,
-  },
-  {
-    number: '08',
-    title: 'Telescope Cooling System',
-    category: 'PERSONAL PROJECT · THERMAL DESIGN',
-    description:
-      'Modifying a Dobsonian telescope with a PC fan to improve thermal management and observing performance.',
-    tags: ['Thermal Management', 'Mechanical Design'],
-    image: null,
-  },
-  {
-    number: '09',
-    title: 'PolyOrbite',
-    category: 'ROBOTICS · LEADERSHIP',
-    description:
-      'A multidisciplinary rover team experience spanning technical development, systems integration, team leadership, and event organization.',
-    tags: ['Robotics', 'Systems Engineering', 'Leadership'],
-    image: null,
-  },
-];
+const allProjects = await getCollection('projects');
 
+const projects = allProjects
+  .filter((project) => import.meta.env.DEV || !project.data.draft)
+  .sort(
+    (a, b) =>
+      (a.data.order ?? Number.MAX_SAFE_INTEGER) -
+      (b.data.order ?? Number.MAX_SAFE_INTEGER),
+  );
 ---
+
 
 <Layout>
   <div class="site-shell">
@@ -109,31 +36,35 @@ const projects = [
           across hardware, software, and multidisciplinary systems.
         </p>
       </section>
-
+    
       <section class="projects-grid" aria-label="Project portfolio">
         {projects.map((project) => (
-          <article class="project-card">
+          <a class="project-card" href={`/projects/${project.id}`}>
             <div class="project-image">
-              {project.image ? (
-                <img src={project.image} alt="" loading="lazy" />
+              {project.data.cover ? (
+                <img
+                  src={project.data.cover}
+                  alt=""
+                  loading="lazy"
+                />
               ) : (
                 <div class="image-placeholder" aria-hidden="true">
-                  <span>{project.number}</span>
+                  <span>{String(project.data.order ?? '').padStart(2, '0')}</span>
                   <span class="placeholder-label">IMAGE / TO BE ADDED</span>
                 </div>
               )}
             </div>
 
             <div class="project-info">
-              <p class="project-category">{project.category}</p>
-              <h2>{project.title}</h2>
-              <p class="project-description">{project.description}</p>
+              <p class="project-category">{project.data.category}</p>
+              <h2>{project.data.title}</h2>
+              <p class="project-description">{project.data.description}</p>
 
               <ul class="project-tags" aria-label="Technologies and topics">
-                {project.tags.map((tag) => <li>{tag}</li>)}
+                {project.data.tags.map((tag) => <li>{tag}</li>)}
               </ul>
             </div>
-          </article>
+          </a>
         ))}
       </section>
     </main>
@@ -218,16 +149,28 @@ const projects = [
     line-height: 1.7;
   }
 
-    .projects-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    column-gap: var(--space-6);
-    row-gap: var(--space-5);
-    padding-bottom: var(--space-6);
-    }
+  .projects-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: var(--space-6);
+  row-gap: var(--space-5);
+  padding-bottom: var(--space-6);
+  }
 
   .project-card {
-    min-width: 0;
+  display: block;
+  color: inherit;
+  text-decoration: none;
+  min-width: 0;
+  }
+
+  .project-card:hover h2 {
+  color: var(--color-accent);
+  }
+
+  .project-card:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 6px;
   }
 
   .project-image {
