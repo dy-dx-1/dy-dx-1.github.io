@@ -25,14 +25,14 @@
   --text-xl: 1.75rem;
   --text-2xl: clamp(2rem, 5vw, 3.5rem);
 
-  --space-1: 0.5rem;
-  --space-2: 1rem;
-  --space-3: 1.5rem;
+  --space-1: 0.375rem;
+  --space-2: 0.75rem;
+  --space-3: 1.25rem;
   --space-4: 2rem;
   --space-5: 3rem;
-  --space-6: 4rem;
+  --space-6: 5rem;
 
-  --content-width: 1100px;
+  --content-width: 1280px;
   --reading-width: 720px;
 }
 
