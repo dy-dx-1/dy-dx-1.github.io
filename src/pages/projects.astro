@@ -182,6 +182,23 @@ const projects = allProjects
     background: var(--color-surface);
   }
 
+  .project-image img,
+  .project-image .image-placeholder {
+    transition: transform 300ms ease;
+  }
+
+  .project-card:hover .project-image img,
+  .project-card:hover .project-image .image-placeholder {
+    transform: scale(1.04);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+  .project-image img,
+  .project-image .image-placeholder {
+    transition: none;
+  }
+  }
+
   .image-placeholder {
     width: 100%;
     height: 100%;

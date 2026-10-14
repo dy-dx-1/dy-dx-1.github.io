@@ -1,0 +1,51 @@
+1. Make project cards clickable — Link each card on /projects to its corresponding dynamic project page and test navigation.
+
+2. Refine the individual project-page layout — Review typography, spacing, images, metadata, and responsive behavior on desktop and mobile.
+
+3. Establish a reusable case-study structure — Decide on a consistent format for problem, objectives, system architecture, personal contributions, implementation, testing, results, and lessons learned.
+
+4. Write the Collaborative Localization case study — Develop the thesis project page, clearly separating completed work, current implementation, research questions, and future work.
+
+5. Write the TDOA Localization case study — Document the Bitcraze localization project, system architecture, technical contributions, testing, and results.
+
+6. Write the Turbofan Vibration Analysis case study — Explain the original engineering problem, the graphical interface, implementation, and its practical value.
+
+7. Write the Motorized Standing Desk case study — Document requirements, mechanical/electrical design, actuation, control, integration, and test results.
+
+8. Write the Custom Rover Wheels case study — Present design constraints, CAD, material/manufacturing choices, iterations, and rover integration.
+
+9. Write the PowerUp Plane Reverse Engineering case study — Document investigation of the aircraft, controller design, electronics, software, and validation.
+
+10. Write the Turbojet Modal Analysis case study — Present the capstone objectives, experimental or analytical methods, dynamic response, findings, and team contributions.
+
+11. Write the Telescope Cooling System case study — Explain the thermal problem, fan modification, mechanical integration, and any measurements or observations.
+
+12. Plan the PolyOrbite overview page — Create a dedicated team and leadership page linking to detailed technical projects such as the rover wheels; cover responsibilities, systems integration, competition, and event organization.
+
+13. Build the About page — Present education, engineering background, career interests, and a concise professional introduction consistent with the target roles.
+
+14. Add real project visuals — Select and prepare photographs, CAD renders, diagrams, screenshots, and plots; organize them in public/images and reference them in project metadata or Markdown.
+
+15. Improve project discovery — Add featured projects or ordering, refine categories and tags, and ensure the most relevant work for space systems, robotics, and defence/public-safety technology is easy to find.
+
+16. Refine the homepage — Review the introduction, navigation, and project call-to-action; keep the design personal, technical, and uncluttered.
+
+17. Add professional contact information — Decide what email, LinkedIn, GitHub, résumé/CV, or other professional links to expose publicly.
+
+18. Review responsive design and accessibility — Test mobile/tablet/desktop layouts, keyboard navigation, focus indicators, image alt text, contrast, headings, and link behavior.
+
+19. Review site metadata and polish — Set page titles and descriptions, favicon, social-sharing metadata, and any other basic site identity details.
+
+20. Test draft and production behavior — Verify drafts appear locally but are excluded from production builds; build the static site and fix errors or warnings.
+
+21. Review privacy and content sensitivity — Remove secrets, private information, confidential employer/lab material, and anything not authorized for public release.
+
+22. Set up the Git repository for publication — Review tracked files, add or confirm .gitignore rules, commit the finished work, and create a GitHub repository if needed.
+
+23. Choose and configure static hosting — Select GitHub Pages or Cloudflare Pages and configure the build command, output directory, and deployment settings.
+
+24. Configure the production URL — Set Astro's site configuration and any required base path; connect a custom domain if desired.
+
+25. Deploy and verify the live website — Publish the site, test all pages and assets on the live URL, verify navigation and mobile layout, and fix deployment-specific issues.
+
+26. Establish a maintenance workflow — Document how to add projects, update Markdown content and images, preview locally, commit changes, and redeploy.
