@@ -31,13 +31,23 @@ const { Content } = await render(project);
       </ul>
     </header>
 
-    {project.data.cover && (
+    {project.data.gallery.length > 0 ? (
+      <section class="project-gallery" aria-label="Project images">
+        {project.data.gallery.map((image) => (
+          <img
+            src={image}
+            alt={`${project.data.title} project image`}
+            loading="lazy"
+          />
+        ))}
+      </section>
+    ) : project.data.cover ? (
       <img
         class="project-cover"
         src={project.data.cover}
         alt={`Cover image for ${project.data.title}`}
       />
-    )}
+    ) : null}
 
     <article class="project-content">
       <Content />
@@ -154,6 +164,26 @@ const { Content } = await render(project);
     border-radius: 4px;
   }
 
+  .project-gallery {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+    margin-bottom: var(--space-6);
+  }
+
+  .project-gallery img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 3 / 2;
+    object-fit: cover;
+    border-radius: 4px;
+  }
+
+  .project-gallery img:only-child {
+    grid-column: 1 / -1;
+    max-height: 560px;
+  }
+
   .project-footer {
     margin-top: var(--space-6);
     padding-top: var(--space-3);
@@ -175,6 +205,10 @@ const { Content } = await render(project);
     .project-content {
       font-size: 1rem;
       line-height: 1.75;
+    }
+    .project-gallery {
+      grid-template-columns: 1fr;
+      margin-bottom: var(--space-4);
     }
   }
 </style>
