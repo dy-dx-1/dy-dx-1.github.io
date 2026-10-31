@@ -13,8 +13,8 @@ featured: false
 order: 8
 gallery:
   - "/images/telescope-cooling/main.jpg"
-  - "/images/telescope-cooling/cad.jpg"
   - "/images/telescope-cooling/inside.jpg"
+  - "/images/telescope-cooling/animation.gif"
 ---
 
 ## Overview
