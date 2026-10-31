@@ -1,0 +1,39 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<!-- Placeholder: the full About page is a later step. -->
+<Layout title="About" description="Background and engineering interests.">
+  <main class="container">
+    <section class="page-intro">
+      <h1>About<span class="wordmark-period">.</span></h1>
+      <p>
+        I hold a bachelor's degree in mechanical engineering from
+        Polytechnique Montréal and am pursuing a research master's in
+        computer engineering.
+      </p>
+      <p>More coming soon.</p>
+    </section>
+  </main>
+</Layout>
+
+<style>
+  .page-intro {
+    max-width: 700px;
+    padding-top: clamp(4rem, 10vw, 7rem);
+    padding-bottom: var(--space-6);
+  }
+
+  h1 {
+    margin-bottom: var(--space-3);
+    font-size: clamp(3rem, 8vw, 5rem);
+    font-weight: 500;
+    letter-spacing: -0.065em;
+    line-height: 1;
+  }
+
+  p {
+    color: var(--color-text-muted);
+    font-size: var(--text-lg);
+  }
+</style>

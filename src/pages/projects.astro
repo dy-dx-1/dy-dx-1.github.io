@@ -1,52 +1,34 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import { getCollection } from 'astro:content';
+import { getPublishedProjects } from '../lib/projects';
 
-const allProjects = await getCollection('projects');
-
-const projects = allProjects
-  .filter((project) => import.meta.env.DEV || !project.data.draft)
-  .sort(
-    (a, b) =>
-      (a.data.order ?? Number.MAX_SAFE_INTEGER) -
-      (b.data.order ?? Number.MAX_SAFE_INTEGER),
-  );
+const projects = await getPublishedProjects();
 ---
 
+<Layout
+  title="Projects"
+  description="Engineering projects, research, and experiments across hardware, software, and multidisciplinary systems."
+>
+  <main class="container">
+    <section class="page-intro">
+      <p class="eyebrow">Selected work / Research / Personal projects</p>
+      <h1>Projects<span class="wordmark-period">.</span></h1>
+      <p class="page-description">
+        A collection of engineering projects, research, and experiments
+        across hardware, software, and multidisciplinary systems.
+      </p>
+    </section>
 
-<Layout>
-  <div class="site-shell">
-    <header class="site-header container">
-      <a class="wordmark" href="/" aria-label="Home">
-        Nicolas<span class="wordmark-period">.</span>
-      </a>
+    <section class="projects-grid" aria-label="Project portfolio">
+      {projects.map((project) => {
+        // Fall back to the first gallery image when no cover is set.
+        const image = project.data.cover ?? project.data.gallery[0];
 
-      <nav aria-label="Main navigation">
-        <a href="/projects" aria-current="page">Projects</a>
-        <a href="/about">About</a>
-      </nav>
-    </header>
-
-    <main class="container">
-      <section class="page-intro">
-        <p class="eyebrow">Selected work / Research / Personal projects</p>
-        <h1>Projects<span class="wordmark-period">.</span></h1>
-        <p class="page-description">
-          A collection of engineering projects, research, and experiments
-          across hardware, software, and multidisciplinary systems.
-        </p>
-      </section>
-    
-      <section class="projects-grid" aria-label="Project portfolio">
-        {projects.map((project) => (
+        return (
           <a class="project-card" href={`/projects/${project.id}`}>
             <div class="project-image">
-              {project.data.cover ? (
-                <img
-                  src={project.data.cover}
-                  alt=""
-                  loading="lazy"
-                />
+              {image ? (
+                <img src={image} alt="" loading="lazy" />
               ) : (
                 <div class="image-placeholder" aria-hidden="true">
                   <span>{String(project.data.order ?? '').padStart(2, '0')}</span>
@@ -60,70 +42,18 @@ const projects = allProjects
               <h2>{project.data.title}</h2>
               <p class="project-description">{project.data.description}</p>
 
-              <ul class="project-tags" aria-label="Technologies and topics">
+              <ul class="tag-list" aria-label="Technologies and topics">
                 {project.data.tags.map((tag) => <li>{tag}</li>)}
               </ul>
             </div>
           </a>
-        ))}
-      </section>
-    </main>
-
-    <footer class="site-footer container">
-      <span>Engineering portfolio</span>
-      <a href="/">Back to home ↑</a>
-      <span>© {new Date().getFullYear()} Nicolas</span>
-    </footer>
-  </div>
+        );
+      })}
+    </section>
+  </main>
 </Layout>
 
 <style>
-  .site-shell {
-    min-height: 100vh;
-  }
-
-  .site-header {
-    min-height: 76px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--space-3);
-    border-bottom: 1px solid var(--color-border);
-  }
-
-  .wordmark {
-    color: var(--color-text);
-    font-size: var(--text-lg);
-    font-weight: 600;
-    letter-spacing: -0.04em;
-    text-decoration: none;
-  }
-
-  .wordmark-period {
-    color: var(--color-accent);
-  }
-
-  nav {
-    display: flex;
-    gap: var(--space-3);
-  }
-
-  nav a,
-  .site-footer a {
-    color: var(--color-text-muted);
-    font-size: var(--text-sm);
-    text-decoration: none;
-  }
-
-  nav a:hover,
-  .site-footer a:hover {
-    color: var(--color-accent);
-  }
-
-  nav a[aria-current='page'] {
-    color: var(--color-text);
-  }
-
   .page-intro {
     max-width: 700px;
     padding-top: clamp(4rem, 10vw, 7rem);
@@ -150,22 +80,22 @@ const projects = allProjects
   }
 
   .projects-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  column-gap: var(--space-6);
-  row-gap: var(--space-5);
-  padding-bottom: var(--space-6);
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: var(--space-6);
+    row-gap: var(--space-5);
+    padding-bottom: var(--space-6);
   }
 
   .project-card {
-  display: block;
-  color: inherit;
-  text-decoration: none;
-  min-width: 0;
+    display: block;
+    color: inherit;
+    text-decoration: none;
+    min-width: 0;
   }
 
   .project-card:hover h2 {
-  color: var(--color-accent);
+    color: var(--color-accent);
   }
 
   .project-card:focus-visible {
@@ -182,21 +112,22 @@ const projects = allProjects
     background: var(--color-surface);
   }
 
+  .project-image img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* Reduced-motion users are handled globally in global.css. */
   .project-image img,
-  .project-image .image-placeholder {
-    transition: transform 300ms ease;
+  .image-placeholder {
+    transition: transform 250ms ease;
   }
 
   .project-card:hover .project-image img,
-  .project-card:hover .project-image .image-placeholder {
-    transform: scale(1.04);
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-  .project-image img,
-  .project-image .image-placeholder {
-    transition: none;
-  }
+  .project-card:hover .image-placeholder {
+    transform: scale(1.02);
   }
 
   .image-placeholder {
@@ -229,77 +160,28 @@ const projects = allProjects
     letter-spacing: 0.08em;
   }
 
-  .project-category {
-    margin-bottom: 0.6rem;
-    color: var(--color-accent);
-    font-family: var(--font-mono);
-    font-size: 0.68rem;
-    letter-spacing: 0.035em;
-  }
-
-    .project-info h2 {
+  .project-info h2 {
     margin-bottom: 0.85rem;
     font-size: 1.6rem;
     font-weight: 600;
     letter-spacing: -0.025em;
-    }
+  }
 
-    .project-description {
+  .project-description {
     max-width: 600px;
     margin-bottom: var(--space-3);
     color: var(--color-text-muted);
     font-size: 1.1rem;
     line-height: 1.75;
-    }
-
-  .project-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.4rem;
-    padding: 0;
-    margin: 0;
-    list-style: none;
-  }
-
-  .project-tags li {
-    padding: 0.45rem 0.7rem;
-    border: 1px solid var(--color-border);
-    color: var(--color-text-muted);
-    font-family: var(--font-mono);
-    font-size: 0.8rem;
-  }
-
-  .site-footer {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    gap: var(--space-3);
-    padding-top: var(--space-3);
-    padding-bottom: var(--space-3);
-    border-top: 1px solid var(--color-border);
-    color: var(--color-text-muted);
-    font-family: var(--font-mono);
-    font-size: var(--text-xs);
   }
 
   @media (max-width: 700px) {
     .projects-grid {
       grid-template-columns: 1fr;
-      row-gap: var(--space-5);
     }
 
     .project-image {
       aspect-ratio: 16 / 9;
-    }
-  }
-
-  @media (prefers-reduced-motion: no-preference) {
-    .project-image img {
-      transition: transform 250ms ease;
-    }
-
-    .project-card:hover .project-image img {
-      transform: scale(1.02);
     }
   }
 </style>

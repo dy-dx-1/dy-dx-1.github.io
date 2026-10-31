@@ -1,4 +1,3 @@
-
 /* =========================================
    Engineering Portfolio — Global Design System
    ========================================= */
@@ -36,7 +35,25 @@
   --reading-width: 900px;
 }
 
-/* Dark theme: mission systems */
+/* Dark theme: mission systems.
+   Follows the operating system setting. The data-theme attribute
+   is kept so a manual toggle can be added later; when set, it
+   overrides the system preference. The values are repeated because
+   CSS cannot share one block between a media query and a selector. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+
+    --color-background: #171a20;
+    --color-surface: #22262e;
+    --color-text: #e7e9eb;
+    --color-text-muted: #a3a9b2;
+    --color-accent: #d59b54;
+    --color-accent-hover: #efb96f;
+    --color-border: #3b414b;
+  }
+}
+
 [data-theme="dark"] {
   color-scheme: dark;
 
@@ -102,10 +119,6 @@ h2 {
 
 h3 {
   font-size: var(--text-lg);
-}
-
-p {
-  max-width: var(--reading-width);
 }
 
 small,
@@ -180,6 +193,36 @@ img {
   font-size: var(--text-xs);
   letter-spacing: 0.08em;
   text-transform: uppercase;
+}
+
+.wordmark-period {
+  color: var(--color-accent);
+}
+
+/* Project metadata, shared by project cards and project pages */
+.project-category {
+  margin-bottom: 0.6rem;
+  color: var(--color-accent);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.035em;
+}
+
+.tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.tag-list li {
+  padding: 0.45rem 0.7rem;
+  border: 1px solid var(--color-border);
+  color: var(--color-text-muted);
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
 }
 
 .divider {

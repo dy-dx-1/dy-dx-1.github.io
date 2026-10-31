@@ -1,4 +1,3 @@
-
 ---
 title: "Telescope Cooling System"
 description: "A custom fan and monitoring system designed to improve the thermal performance of a Dobsonian telescope."

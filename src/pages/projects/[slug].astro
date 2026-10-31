@@ -1,23 +1,22 @@
 ---
 import Layout from '../../layouts/Layout.astro';
-import { getCollection, render } from 'astro:content';
+import { render } from 'astro:content';
+import { getPublishedProjects } from '../../lib/projects';
 
 export async function getStaticPaths() {
-  const projects = await getCollection('projects');
+  const projects = await getPublishedProjects();
 
-  return projects
-    .filter((project) => import.meta.env.DEV || !project.data.draft)
-    .map((project) => ({
-      params: { slug: project.id },
-      props: { project },
-    }));
+  return projects.map((project) => ({
+    params: { slug: project.id },
+    props: { project },
+  }));
 }
 
 const { project } = Astro.props;
 const { Content } = await render(project);
 ---
 
-<Layout title={`${project.data.title} | Nicolas`}>
+<Layout title={project.data.title} description={project.data.description}>
   <main class="project-page">
     <a class="back-link" href="/projects">← All projects</a>
 
@@ -26,7 +25,7 @@ const { Content } = await render(project);
       <h1>{project.data.title}</h1>
       <p class="project-description">{project.data.description}</p>
 
-      <ul class="project-tags" aria-label="Technologies and topics">
+      <ul class="tag-list" aria-label="Technologies and topics">
         {project.data.tags.map((tag) => <li>{tag}</li>)}
       </ul>
     </header>
@@ -81,6 +80,7 @@ const { Content } = await render(project);
 
 <style>
   .project-page {
+    width: 100%;
     max-width: var(--content-width);
     margin: 0 auto;
     padding: var(--space-5) var(--space-4);
@@ -88,9 +88,9 @@ const { Content } = await render(project);
 
   .back-link {
     display: inline-block;
-    color: var(--color-muted, #777);
-    text-decoration: none;
     margin-bottom: var(--space-5);
+    color: var(--color-text-muted);
+    text-decoration: none;
   }
 
   .back-link:hover {
@@ -98,42 +98,26 @@ const { Content } = await render(project);
   }
 
   .project-header {
-    max-width: 850px;
+    max-width: var(--reading-width);
     margin: 0 auto var(--space-5);
   }
 
-  .project-category {
+  .project-header .project-category {
     margin-bottom: var(--space-2);
-    color: var(--color-accent);
-    font-size: 0.9rem;
+    font-size: var(--text-sm);
   }
 
   h1 {
+    margin-bottom: var(--space-3);
     font-size: clamp(2.5rem, 6vw, 4.5rem);
     line-height: 1.1;
     letter-spacing: -0.04em;
-    margin-bottom: var(--space-3);
   }
 
   .project-description {
+    margin-bottom: var(--space-3);
     font-size: 1.2rem;
     line-height: 1.7;
-    margin-bottom: var(--space-3);
-  }
-
-  .project-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-1);
-    list-style: none;
-    padding: 0;
-  }
-
-  .project-tags li {
-    border: 1px solid var(--color-border);
-    border-radius: 3px;
-    padding: 0.4rem 0.65rem;
-    font-size: 0.85rem;
   }
 
   .project-cover {
@@ -146,6 +130,77 @@ const { Content } = await render(project);
     margin-bottom: var(--space-6);
   }
 
+  /* Gallery */
+  .project-gallery {
+    position: relative;
+    width: 100%;
+    margin: 0 auto var(--space-6);
+  }
+
+  .gallery-track {
+    display: flex;
+    gap: 1.25rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+
+    /* Allow the first and last slides to be centered */
+    padding-inline: 12%;
+    scroll-padding-inline: 12%;
+  }
+
+  .gallery-track::-webkit-scrollbar {
+    display: none;
+  }
+
+  .gallery-slide {
+    flex: 0 0 76%;
+    min-width: 0;
+    height: 500px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    scroll-snap-align: center;
+  }
+
+  .gallery-slide img {
+    display: block;
+    max-height: 100%;
+    width: auto;
+    object-fit: contain;
+    border-radius: 6px;
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.14);
+  }
+
+  .gallery-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 2;
+    width: 42px;
+    height: 42px;
+    border: 1px solid var(--color-border);
+    border-radius: 50%;
+    background: var(--color-background);
+    color: var(--color-text);
+    cursor: pointer;
+    font-size: 1.25rem;
+  }
+
+  .gallery-prev {
+    left: 0.75rem;
+  }
+
+  .gallery-next {
+    right: 0.75rem;
+  }
+
+  .gallery-arrow:hover {
+    border-color: var(--color-accent);
+  }
+
+  /* Markdown content */
   .project-content {
     max-width: var(--reading-width);
     margin: 0 auto;
@@ -172,11 +227,6 @@ const { Content } = await render(project);
     margin-bottom: var(--space-3);
   }
 
-  .project-content :global(img) {
-    max-width: 100%;
-    height: auto;
-  }
-
   .project-content :global(pre) {
     overflow-x: auto;
     padding: var(--space-3);
@@ -184,99 +234,22 @@ const { Content } = await render(project);
     border-radius: 4px;
   }
 
-
-.project-gallery {
-  position: relative;
-  width: 100%;
-  margin-bottom: var(--space-6);
-}
-
-.gallery-track {
-  display: flex;
-  gap: 1rem;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  scroll-behavior: smooth;
-  scrollbar-width: none;
-}
-
-.gallery-track::-webkit-scrollbar {
-  display: none;
-}
-
-.gallery-slide {
-  flex: 0 0 85%;
-  scroll-snap-align: center;
-  min-width: 0;
-}
-
-.gallery-slide img {
-  display: block;
-  width: 100%;
-  height: 480px;
-  object-fit: contain;
-  border-radius: 4px;
-}
-
-.gallery-arrow {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 2;
-  width: 42px;
-  height: 42px;
-  border: 1px solid var(--color-border);
-  border-radius: 50%;
-  background: var(--color-bg);
-  color: var(--color-text);
-  cursor: pointer;
-  font-size: 1.25rem;
-}
-
-.gallery-prev {
-  left: 1rem;
-}
-
-.gallery-next {
-  right: 1rem;
-}
-
-  .gallery-arrow:hover {
-    border-color: var(--color-accent);
-  }
-
-  @media (max-width: 700px) {
-    .gallery-slide {
-      flex-basis: 92%;
-    }
-
-    .gallery-slide img {
-      height: 280px;
-    }
-
-    .gallery-arrow {
-      width: 34px;
-      height: 34px;
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .gallery-track {
-      scroll-behavior: auto;
-    }
-  }
-
-
   .project-footer {
-    margin-top: var(--space-6);
+    max-width: var(--reading-width);
+    margin: var(--space-6) auto 0;
     padding-top: var(--space-3);
     border-top: 1px solid var(--color-border);
+  }
+
+  .project-footer .back-link {
+    margin-bottom: 0;
   }
 
   @media (max-width: 700px) {
     .project-page {
       padding: var(--space-4) var(--space-3);
     }
+
     .project-header {
       margin-bottom: var(--space-4);
     }
@@ -285,13 +258,31 @@ const { Content } = await render(project);
       margin-bottom: var(--space-4);
     }
 
+    .gallery-track {
+      gap: 0.75rem;
+      padding-inline: 5%;
+      scroll-padding-inline: 5%;
+    }
+
+    .gallery-slide {
+      flex-basis: 90%;
+      height: 320px;
+    }
+
+    .gallery-arrow {
+      width: 34px;
+      height: 34px;
+    }
+
     .project-content {
       font-size: 1rem;
       line-height: 1.75;
     }
-    .project-gallery {
-      grid-template-columns: 1fr;
-      margin-bottom: var(--space-4);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .gallery-track {
+      scroll-behavior: auto;
     }
   }
 </style>
@@ -306,16 +297,34 @@ const { Content } = await render(project);
 
     let currentIndex = 0;
 
+    // Scroll only the track horizontally. scrollIntoView() would also
+    // scroll the page vertically to bring the slide into view.
+    function centerSlide(slide: HTMLElement, behavior: ScrollBehavior) {
+      const trackRect = track!.getBoundingClientRect();
+      const slideRect = slide.getBoundingClientRect();
+
+      track!.scrollTo({
+        left:
+          track!.scrollLeft +
+          (slideRect.left - trackRect.left) -
+          (trackRect.width - slideRect.width) / 2,
+        behavior,
+      });
+    }
+
+    requestAnimationFrame(() => {
+      if (slides[0]) centerSlide(slides[0], 'instant');
+    });
+
     function goToSlide(index: number) {
       currentIndex = Math.max(0, Math.min(index, slides.length - 1));
 
-      slides[currentIndex].scrollIntoView({
-        behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      centerSlide(
+        slides[currentIndex],
+        window.matchMedia('(prefers-reduced-motion: reduce)').matches
           ? 'instant'
           : 'smooth',
-        block: 'nearest',
-        inline: 'center',
-      });
+      );
     }
 
     previous.addEventListener('click', () => goToSlide(currentIndex - 1));
