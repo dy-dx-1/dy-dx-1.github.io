@@ -1,5 +1,6 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+import { Image } from 'astro:assets';
 import { render } from 'astro:content';
 import { getPublishedProjects } from '../../lib/projects';
 
@@ -15,9 +16,11 @@ export async function getStaticPaths() {
 const { project } = Astro.props;
 const { Content } = await render(project);
 
-const isVideo = (src: string) => /\.(mp4|webm)$/i.test(src);
-const gallery = project.data.gallery;
-const firstIsVideo = gallery.length > 0 && isVideo(gallery[0]);
+const { title, gallery, cover } = project.data;
+
+// Main image is at most ~1100px wide on desktop and full width on phones
+const mainWidths = [480, 800, 1100, 1600];
+const mainSizes = '(max-width: 700px) 100vw, 1100px';
 ---
 
 <Layout title={project.data.title} description={project.data.description}>
@@ -34,29 +37,39 @@ const firstIsVideo = gallery.length > 0 && isVideo(gallery[0]);
       </ul>
     </header>
 
-    {project.data.gallery.length > 0 ? (
+    {gallery.length > 0 ? (
       <section class="project-gallery" aria-label="Project images">
         <div class="gallery-main">
-          {/* Both elements are always rendered; the script shows the one
-              matching the selected item's type. */}
-          <img
-            class="gallery-main-image"
-            src={firstIsVideo ? undefined : gallery[0]}
-            alt={`${project.data.title} image 1`}
-            hidden={firstIsVideo}
-          />
-          <video
-            class="gallery-main-video"
-            src={firstIsVideo ? gallery[0] : undefined}
-            aria-label={`${project.data.title} video`}
-            autoplay
-            muted
-            loop
-            playsinline
-            hidden={!firstIsVideo}
-          />
+          {/* One slide per item; the script shows the selected one. Hidden
+              lazy images aren't downloaded until they are shown. */}
+          {gallery.map((item, index) =>
+            'video' in item ? (
+              <video
+                class="gallery-slide"
+                src={item.video}
+                poster={item.poster?.src}
+                aria-label={`${title} video`}
+                muted
+                loop
+                playsinline
+                autoplay={index === 0}
+                preload={index === 0 ? 'auto' : 'none'}
+                hidden={index !== 0}
+              />
+            ) : (
+              <Image
+                class="gallery-slide"
+                src={item}
+                widths={mainWidths}
+                sizes={mainSizes}
+                alt={`${title} image ${index + 1}`}
+                loading={index === 0 ? 'eager' : 'lazy'}
+                hidden={index !== 0}
+              />
+            ),
+          )}
 
-          {project.data.gallery.length > 1 && (
+          {gallery.length > 1 && (
             <>
               <button
                 class="gallery-arrow gallery-prev"
@@ -76,36 +89,42 @@ const firstIsVideo = gallery.length > 0 && isVideo(gallery[0]);
           )}
         </div>
 
-        {project.data.gallery.length > 1 && (
+        {gallery.length > 1 && (
           <ul class="gallery-thumbs" aria-label="Choose an image">
-            {project.data.gallery.map((image, index) => (
+            {gallery.map((item, index) => (
               <li>
                 <button
                   class="gallery-thumb"
                   type="button"
-                  data-src={image}
-                  data-video={isVideo(image) ? '' : undefined}
-                  aria-label={`Show ${isVideo(image) ? 'video' : 'image'} ${index + 1}`}
+                  aria-label={`Show ${'video' in item ? 'video' : 'image'} ${index + 1}`}
                   aria-current={index === 0 ? 'true' : undefined}
                 >
-                  {isVideo(image) ? (
-                    // #t= makes the browser render a frame as the preview
-                    <video src={`${image}#t=0.1`} muted playsinline preload="metadata" />
+                  {'video' in item ? (
+                    item.poster ? (
+                      <Image src={item.poster} width={240} alt="" />
+                    ) : (
+                      // #t= makes the browser render a frame as the preview
+                      <video src={`${item.video}#t=0.1`} muted playsinline preload="metadata" />
+                    )
                   ) : (
-                    <img src={image} alt="" loading="lazy" />
+                    // 2x the displayed 120px width for high-density screens
+                    <Image src={item} width={240} alt="" />
                   )}
-                  {isVideo(image) && <span class="gallery-thumb-play" aria-hidden="true">&#9654;</span>}
+                  {'video' in item && <span class="gallery-thumb-play" aria-hidden="true">&#9654;</span>}
                 </button>
               </li>
             ))}
           </ul>
         )}
       </section>
-    ) : project.data.cover ? (
-      <img
+    ) : cover ? (
+      <Image
         class="project-cover"
-        src={project.data.cover}
-        alt={`Cover image for ${project.data.title}`}
+        src={cover}
+        widths={mainWidths}
+        sizes={mainSizes}
+        alt={`Cover image for ${title}`}
+        loading="eager"
       />
     ) : null}
 
@@ -193,9 +212,10 @@ const firstIsVideo = gallery.length > 0 && isVideo(gallery[0]);
     overflow: hidden;
   }
 
-  .gallery-main-image,
-  .gallery-main-video {
+  .gallery-slide {
     display: block;
+    width: auto;
+    height: auto;
     max-width: 100%;
     max-height: 100%;
     object-fit: contain;
@@ -382,39 +402,28 @@ const firstIsVideo = gallery.length > 0 && isVideo(gallery[0]);
 </style>
 
 <script>
-  const mainImage = document.querySelector<HTMLImageElement>('.gallery-main-image');
-  const mainVideo = document.querySelector<HTMLVideoElement>('.gallery-main-video');
+  const slides = Array.from(document.querySelectorAll<HTMLElement>('.gallery-main .gallery-slide'));
   const thumbs = Array.from(document.querySelectorAll<HTMLButtonElement>('.gallery-thumb'));
   const previous = document.querySelector<HTMLButtonElement>('.gallery-prev');
   const next = document.querySelector<HTMLButtonElement>('.gallery-next');
 
-  if (mainImage && mainVideo && thumbs.length > 1) {
-    const baseAlt = mainImage.alt.replace(/ image \d+$/, '');
+  if (slides.length > 1) {
     let currentIndex = 0;
 
     function showImage(index: number) {
       // Wrap around at either end
-      currentIndex = (index + thumbs.length) % thumbs.length;
+      currentIndex = (index + slides.length) % slides.length;
+
+      slides.forEach((slide, i) => {
+        slide.hidden = i !== currentIndex;
+
+        if (slide instanceof HTMLVideoElement) {
+          if (i === currentIndex) slide.play().catch(() => {});
+          else slide.pause();
+        }
+      });
 
       const thumb = thumbs[currentIndex];
-      const src = thumb.dataset.src!;
-
-      if (thumb.hasAttribute('data-video')) {
-        mainImage!.hidden = true;
-        mainVideo!.hidden = false;
-        mainVideo!.src = src;
-        mainVideo!.play().catch(() => {});
-      } else {
-        // Clearing src stops the video from downloading in the background
-        mainVideo!.pause();
-        mainVideo!.removeAttribute('src');
-        mainVideo!.load();
-        mainVideo!.hidden = true;
-        mainImage!.hidden = false;
-        mainImage!.src = src;
-        mainImage!.alt = `${baseAlt} image ${currentIndex + 1}`;
-      }
-
       thumbs.forEach((t) => t.removeAttribute('aria-current'));
       thumb.setAttribute('aria-current', 'true');
       // Scroll only the thumbnail list. scrollIntoView() could also
@@ -434,5 +443,22 @@ const firstIsVideo = gallery.length > 0 && isVideo(gallery[0]);
 
     previous?.addEventListener('click', () => showImage(currentIndex - 1));
     next?.addEventListener('click', () => showImage(currentIndex + 1));
+
+    // Left/right arrow keys switch images anywhere on the page, unless the
+    // user is typing or using a shortcut.
+    document.addEventListener('keydown', (event) => {
+      if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
+
+      const target = event.target as HTMLElement;
+      if (target.closest('input, textarea, select, [contenteditable]')) return;
+
+      if (event.key === 'ArrowLeft') {
+        event.preventDefault();
+        showImage(currentIndex - 1);
+      } else if (event.key === 'ArrowRight') {
+        event.preventDefault();
+        showImage(currentIndex + 1);
+      }
+    });
   }
 </script>

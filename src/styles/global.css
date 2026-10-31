@@ -36,8 +36,8 @@
 }
 
 /* Dark theme: mission systems.
-   Follows the operating system setting. The data-theme attribute
-   is kept so a manual toggle can be added later; when set, it
+   Follows the operating system setting. The data-theme attribute,
+   set by the header toggle (see Header.astro and Layout.astro),
    overrides the system preference. The values are repeated because
    CSS cannot share one block between a media query and a selector. */
 @media (prefers-color-scheme: dark) {

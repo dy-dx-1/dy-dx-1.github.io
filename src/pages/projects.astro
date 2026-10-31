@@ -1,5 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { Image } from 'astro:assets';
 import { getPublishedProjects } from '../lib/projects';
 
 const projects = await getPublishedProjects();
@@ -22,13 +23,22 @@ const projects = await getPublishedProjects();
     <section class="projects-grid" aria-label="Project portfolio">
       {projects.map((project) => {
         // Fall back to the first gallery image when no cover is set.
-        const image = project.data.cover ?? project.data.gallery[0];
+        const image =
+          project.data.cover ??
+          project.data.gallery.find(
+            (item): item is ImageMetadata => !('video' in item),
+          );
 
         return (
           <a class="project-card" href={`/projects/${project.id}`}>
             <div class="project-image">
               {image ? (
-                <img src={image} alt="" loading="lazy" />
+                <Image
+                  src={image}
+                  widths={[400, 800, 1200]}
+                  sizes="(max-width: 700px) 100vw, 600px"
+                  alt=""
+                />
               ) : (
                 <div class="image-placeholder" aria-hidden="true">
                   <span>{String(project.data.order ?? '').padStart(2, '0')}</span>

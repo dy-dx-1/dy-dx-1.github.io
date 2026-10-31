@@ -26,6 +26,17 @@ const pageTitle = title ? `${title} | Nicolas` : 'Nicolas | Engineering Portfoli
     <meta name="description" content={description} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>{pageTitle}</title>
+
+    <!-- Apply a saved theme before the page paints to avoid a flash.
+         Without a saved choice, global.css follows the system setting. -->
+    <script is:inline>
+      try {
+        const theme = localStorage.getItem('theme');
+        if (theme === 'light' || theme === 'dark') {
+          document.documentElement.dataset.theme = theme;
+        }
+      } catch {}
+    </script>
   </head>
   <body>
     <div class="site-shell">

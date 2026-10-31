@@ -11,9 +11,9 @@ draft: true
 featured: false
 order: 8
 gallery:
-  - "/images/telescope-cooling/main.jpg"
-  - "/images/telescope-cooling/inside.jpg"
-  - "/images/telescope-cooling/animation.mp4"
+  - "../../assets/projects/telescope-cooling/main.jpg"
+  - "../../assets/projects/telescope-cooling/inside.jpg"
+  - video: "/images/telescope-cooling/animation.mp4"
 ---
 
 ## Overview
