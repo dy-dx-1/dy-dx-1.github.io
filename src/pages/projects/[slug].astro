@@ -14,6 +14,10 @@ export async function getStaticPaths() {
 
 const { project } = Astro.props;
 const { Content } = await render(project);
+
+const isVideo = (src: string) => /\.(mp4|webm)$/i.test(src);
+const gallery = project.data.gallery;
+const firstIsVideo = gallery.length > 0 && isVideo(gallery[0]);
 ---
 
 <Layout title={project.data.title} description={project.data.description}>
@@ -32,33 +36,70 @@ const { Content } = await render(project);
 
     {project.data.gallery.length > 0 ? (
       <section class="project-gallery" aria-label="Project images">
-        <button
-          class="gallery-arrow gallery-prev"
-          type="button"
-          aria-label="Previous image"
-        >
-          &#8592;
-        </button>
+        <div class="gallery-main">
+          {/* Both elements are always rendered; the script shows the one
+              matching the selected item's type. */}
+          <img
+            class="gallery-main-image"
+            src={firstIsVideo ? undefined : gallery[0]}
+            alt={`${project.data.title} image 1`}
+            hidden={firstIsVideo}
+          />
+          <video
+            class="gallery-main-video"
+            src={firstIsVideo ? gallery[0] : undefined}
+            aria-label={`${project.data.title} video`}
+            autoplay
+            muted
+            loop
+            playsinline
+            hidden={!firstIsVideo}
+          />
 
-        <div class="gallery-track">
-          {project.data.gallery.map((image, index) => (
-            <div class="gallery-slide">
-              <img
-                src={image}
-                alt={`${project.data.title} image ${index + 1}`}
-                loading="lazy"
-              />
-            </div>
-          ))}
+          {project.data.gallery.length > 1 && (
+            <>
+              <button
+                class="gallery-arrow gallery-prev"
+                type="button"
+                aria-label="Previous image"
+              >
+                &#8592;
+              </button>
+              <button
+                class="gallery-arrow gallery-next"
+                type="button"
+                aria-label="Next image"
+              >
+                &#8594;
+              </button>
+            </>
+          )}
         </div>
 
-        <button
-          class="gallery-arrow gallery-next"
-          type="button"
-          aria-label="Next image"
-        >
-          &#8594;
-        </button>
+        {project.data.gallery.length > 1 && (
+          <ul class="gallery-thumbs" aria-label="Choose an image">
+            {project.data.gallery.map((image, index) => (
+              <li>
+                <button
+                  class="gallery-thumb"
+                  type="button"
+                  data-src={image}
+                  data-video={isVideo(image) ? '' : undefined}
+                  aria-label={`Show ${isVideo(image) ? 'video' : 'image'} ${index + 1}`}
+                  aria-current={index === 0 ? 'true' : undefined}
+                >
+                  {isVideo(image) ? (
+                    // #t= makes the browser render a frame as the preview
+                    <video src={`${image}#t=0.1`} muted playsinline preload="metadata" />
+                  ) : (
+                    <img src={image} alt="" loading="lazy" />
+                  )}
+                  {isVideo(image) && <span class="gallery-thumb-play" aria-hidden="true">&#9654;</span>}
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
       </section>
     ) : project.data.cover ? (
       <img
@@ -132,45 +173,90 @@ const { Content } = await render(project);
 
   /* Gallery */
   .project-gallery {
-    position: relative;
+    --gallery-height: 520px;
+
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 120px;
+    gap: var(--space-3);
     width: 100%;
     margin: 0 auto var(--space-6);
   }
 
-  .gallery-track {
-    display: flex;
-    gap: 1.25rem;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    scroll-behavior: smooth;
-    scrollbar-width: none;
-
-    /* Allow the first and last slides to be centered */
-    padding-inline: 12%;
-    scroll-padding-inline: 12%;
-  }
-
-  .gallery-track::-webkit-scrollbar {
-    display: none;
-  }
-
-  .gallery-slide {
-    flex: 0 0 76%;
-    min-width: 0;
-    height: 500px;
+  .gallery-main {
+    position: relative;
+    height: var(--gallery-height);
     display: flex;
     align-items: center;
     justify-content: center;
-    scroll-snap-align: center;
+    border-radius: 6px;
+    background: var(--color-surface);
+    overflow: hidden;
   }
 
-  .gallery-slide img {
+  .gallery-main-image,
+  .gallery-main-video {
     display: block;
+    max-width: 100%;
     max-height: 100%;
-    width: auto;
     object-fit: contain;
-    border-radius: 6px;
-    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.14);
+  }
+
+  .gallery-main [hidden] {
+    display: none;
+  }
+
+  .gallery-thumbs {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    max-height: var(--gallery-height);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    overflow-y: auto;
+    scrollbar-width: thin;
+  }
+
+  .gallery-thumb {
+    position: relative;
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    padding: 0;
+    border: 2px solid transparent;
+    border-radius: 4px;
+    background: var(--color-surface);
+    cursor: pointer;
+    overflow: hidden;
+    opacity: 0.6;
+    transition: opacity 0.15s, border-color 0.15s;
+  }
+
+  .gallery-thumb img,
+  .gallery-thumb video {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .gallery-thumb-play {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    color: #fff;
+    font-size: 1.25rem;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+  }
+
+  .gallery-thumb:hover {
+    opacity: 1;
+  }
+
+  .gallery-thumb[aria-current='true'] {
+    border-color: var(--color-accent);
+    opacity: 1;
   }
 
   .gallery-arrow {
@@ -258,15 +344,23 @@ const { Content } = await render(project);
       margin-bottom: var(--space-4);
     }
 
-    .gallery-track {
-      gap: 0.75rem;
-      padding-inline: 5%;
-      scroll-padding-inline: 5%;
+    /* Thumbnails move below the main image on narrow screens */
+    .project-gallery {
+      --gallery-height: 320px;
+
+      grid-template-columns: minmax(0, 1fr);
+      gap: var(--space-2);
     }
 
-    .gallery-slide {
-      flex-basis: 90%;
-      height: 320px;
+    .gallery-thumbs {
+      flex-direction: row;
+      max-height: none;
+      overflow-x: auto;
+      overflow-y: hidden;
+    }
+
+    .gallery-thumbs li {
+      flex: 0 0 88px;
     }
 
     .gallery-arrow {
@@ -281,53 +375,64 @@ const { Content } = await render(project);
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .gallery-track {
-      scroll-behavior: auto;
+    .gallery-thumb {
+      transition: none;
     }
   }
 </style>
 
 <script>
-  const track = document.querySelector<HTMLElement>('.gallery-track');
+  const mainImage = document.querySelector<HTMLImageElement>('.gallery-main-image');
+  const mainVideo = document.querySelector<HTMLVideoElement>('.gallery-main-video');
+  const thumbs = Array.from(document.querySelectorAll<HTMLButtonElement>('.gallery-thumb'));
   const previous = document.querySelector<HTMLButtonElement>('.gallery-prev');
   const next = document.querySelector<HTMLButtonElement>('.gallery-next');
 
-  if (track && previous && next) {
-    const slides = Array.from(track.querySelectorAll<HTMLElement>('.gallery-slide'));
-
+  if (mainImage && mainVideo && thumbs.length > 1) {
+    const baseAlt = mainImage.alt.replace(/ image \d+$/, '');
     let currentIndex = 0;
 
-    // Scroll only the track horizontally. scrollIntoView() would also
-    // scroll the page vertically to bring the slide into view.
-    function centerSlide(slide: HTMLElement, behavior: ScrollBehavior) {
-      const trackRect = track!.getBoundingClientRect();
-      const slideRect = slide.getBoundingClientRect();
+    function showImage(index: number) {
+      // Wrap around at either end
+      currentIndex = (index + thumbs.length) % thumbs.length;
 
-      track!.scrollTo({
-        left:
-          track!.scrollLeft +
-          (slideRect.left - trackRect.left) -
-          (trackRect.width - slideRect.width) / 2,
-        behavior,
+      const thumb = thumbs[currentIndex];
+      const src = thumb.dataset.src!;
+
+      if (thumb.hasAttribute('data-video')) {
+        mainImage!.hidden = true;
+        mainVideo!.hidden = false;
+        mainVideo!.src = src;
+        mainVideo!.play().catch(() => {});
+      } else {
+        // Clearing src stops the video from downloading in the background
+        mainVideo!.pause();
+        mainVideo!.removeAttribute('src');
+        mainVideo!.load();
+        mainVideo!.hidden = true;
+        mainImage!.hidden = false;
+        mainImage!.src = src;
+        mainImage!.alt = `${baseAlt} image ${currentIndex + 1}`;
+      }
+
+      thumbs.forEach((t) => t.removeAttribute('aria-current'));
+      thumb.setAttribute('aria-current', 'true');
+      // Scroll only the thumbnail list. scrollIntoView() could also
+      // scroll the page to bring the thumbnail into view.
+      const list = thumb.closest('ul')!;
+      const listRect = list.getBoundingClientRect();
+      const thumbRect = thumb.getBoundingClientRect();
+      list.scrollBy({
+        top: thumbRect.top - listRect.top - (listRect.height - thumbRect.height) / 2,
+        left: thumbRect.left - listRect.left - (listRect.width - thumbRect.width) / 2,
       });
     }
 
-    requestAnimationFrame(() => {
-      if (slides[0]) centerSlide(slides[0], 'instant');
+    thumbs.forEach((thumb, index) => {
+      thumb.addEventListener('click', () => showImage(index));
     });
 
-    function goToSlide(index: number) {
-      currentIndex = Math.max(0, Math.min(index, slides.length - 1));
-
-      centerSlide(
-        slides[currentIndex],
-        window.matchMedia('(prefers-reduced-motion: reduce)').matches
-          ? 'instant'
-          : 'smooth',
-      );
-    }
-
-    previous.addEventListener('click', () => goToSlide(currentIndex - 1));
-    next.addEventListener('click', () => goToSlide(currentIndex + 1));
+    previous?.addEventListener('click', () => showImage(currentIndex - 1));
+    next?.addEventListener('click', () => showImage(currentIndex + 1));
   }
 </script>

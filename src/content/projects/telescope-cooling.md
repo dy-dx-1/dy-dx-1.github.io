@@ -13,7 +13,7 @@ order: 8
 gallery:
   - "/images/telescope-cooling/main.jpg"
   - "/images/telescope-cooling/inside.jpg"
-  - "/images/telescope-cooling/animation.gif"
+  - "/images/telescope-cooling/animation.mp4"
 ---
 
 ## Overview
