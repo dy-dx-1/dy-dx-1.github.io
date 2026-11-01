@@ -13,10 +13,13 @@ draft: true
 featured: false
 order: 4
 gallery:
-  - "../../assets/projects/motorized-desk/drivetrain-cad.png"
-  - "../../assets/projects/motorized-desk/drive-baseplate-cad.png"
+  - "../../assets/projects/motorized-desk/global.jpg"
+  - "../../assets/projects/motorized-desk/elec_pic.png"
   - "../../assets/projects/motorized-desk/compound-gear-fea.png"
   - "../../assets/projects/motorized-desk/gear-ratio-calcs.png"
+  - video: "/images/motorized-desk/full_assy.mp4"
+  - video: "/images/motorized-desk/motor_assy.mp4"
+  - video: "/images/motorized-desk/run_vertical.mp4"
 ---
 
 ## Overview
