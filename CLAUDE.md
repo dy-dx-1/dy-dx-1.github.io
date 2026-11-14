@@ -148,7 +148,7 @@ Preferred project structure:
 3. Outcome
    - 1–2 sentences describing results, validation, or current status.
 
-Typical length: 100–200 words.
+Typical length: 100–400 words.
 
 Visuals are important:
 - Photographs
