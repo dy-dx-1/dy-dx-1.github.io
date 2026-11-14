@@ -1,7 +1,7 @@
 ---
-title: "Turbofan Vibration Analysis"
-description: "A Python desktop interface for exploring nonlinear vibration results from blade-tip / casing contact simulations in aircraft engines."
-category: "Research Internship"
+title: "Nonlinear Vibration Analysis Interface"
+description: "A Python desktop interface for exploring the nonlinear dynamics of blade-tip / casing contact in turbofan engines."
+category: "Undergraduate Research"
 tags:
   - Python
   - PyQt6
@@ -12,25 +12,28 @@ tags:
 draft: true
 featured: false
 order: 3
-cover: "../../assets/projects/turbofan-vibration/gui_global.jpg"
+cover: "../../assets/projects/turbofan-vibration/main.png"
 gallery:
-  - "../../assets/projects/turbofan-vibration/gui_global.jpg"
-  - "../../assets/projects/turbofan-vibration/gui_freq_response.jpg"
-  - "../../assets/projects/turbofan-vibration/gui_modal.jpg"
+  - video: "../../assets/projects/turbofan-vibration/interface_tour.mp4"
+  - "../../assets/projects/turbofan-vibration/main.png"
+  - "../../assets/projects/turbofan-vibration/stab.png"
+  - "../../assets/projects/turbofan-vibration/harm.png"
+  - "../../assets/projects/turbofan-vibration/modal.png"
+  - "../../assets/projects/turbofan-vibration/fourier.png"
 ---
 
 ## Overview
 
-During an eight-month research internship at LAVA (Laboratoire d'Analyse Vibratoire et Acoustique, Polytechnique Montréal), I developed a Python desktop application for analyzing nonlinear dynamic systems, specifically the contact between blade tips and the casing in aircraft engines. The tool turns large sets of harmonic balance simulation results into interactive plots researchers can explore.
+As a part-time UPIR research intern at LAVA, Polytechnique Montréal's vibration and acoustics lab, I spent an academic year alongside my mechanical engineering degree building the analysis interface for the lab's research on blade-tip / casing contact in turbofan engines. The lab's solver computes harmonic balance results; my interface lets researchers explore them interactively.
 
 ## Engineering Highlights
 
-- Built the interface in Python with PyQt6, NumPy, and Matplotlib, using an object-oriented structure so each analysis view could be developed and extended separately.
-- Linked the nonlinear frequency response curve to time-domain and harmonic views: selecting a solution on the curve updates its periodic response, contact force, and harmonic content.
-- Displayed stability along the response branches and marked detected bifurcations (limit, branch, Neimark–Sacker, and period-doubling points).
-- Added dedicated views for modal contributions, harmonic analysis, and Fourier truncation error.
-- Optimized rendering and data handling so the interface stayed responsive on large, complex result sets.
+- Rewrote an existing PyQt5 prototype from scratch in PyQt6 with Qt Designer and an object-oriented architecture, so new analysis views could be added without touching the rest of the code.
+- Added a linked, live view: selecting a solution on the frequency response curve instantly updates its time response, contact force, and harmonic content.
+- Extended the tool with tabs for stability analysis (Floquet exponents and bifurcation detection), harmonics, modal contributions, and Fourier truncation error, plus figure export to LaTeX/TikZ.
+- Used Matplotlib blitting and reworked data handling so interactive updates went from several seconds (with frequent crashes) to near-instant.
+- Documented the code on the lab's GitLab so future students could maintain and extend it.
 
 ## Outcome
 
-TODO: who used the tool after the internship, and what it enabled.
+My supervisor and the lab director were very satisfied with the tool, I was later invited back to join the lab as a master's student. The project gave me hands-on experience in vibration analysis, scientific data visualization, and object-oriented design in Python.
