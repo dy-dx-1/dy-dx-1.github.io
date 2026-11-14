@@ -13,7 +13,7 @@ order: 8
 gallery:
   - "../../assets/projects/telescope-cooling/main.jpg"
   - "../../assets/projects/telescope-cooling/inside.jpg"
-  - video: "/images/telescope-cooling/animation.mp4"
+  - video: "../../assets/projects/telescope-cooling/animation.mp4"
 ---
 
 ## Overview

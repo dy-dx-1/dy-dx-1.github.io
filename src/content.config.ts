@@ -8,7 +8,8 @@ const projects = defineCollection({
     pattern: '**/*.md',
   }),
   // Images are paths relative to the Markdown file (e.g. in src/assets)
-  // so Astro can optimize them. Videos are served as-is from public/.
+  // so Astro can optimize them. Videos use relative paths too and are
+  // resolved to URLs in src/lib/projects.ts (they are copied, not optimized).
   schema: ({ image }) =>
     z.object({
       title: z.string(),

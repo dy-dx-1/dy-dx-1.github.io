@@ -15,10 +15,10 @@ order: 4
 cover: "../../assets/projects/motorized-desk/cover.jpg"
 gallery:
   - "../../assets/projects/motorized-desk/global.jpg"
-  - video: "/images/motorized-desk/run_vertical.mp4"
+  - video: "../../assets/projects/motorized-desk/run_vertical.mp4"
   - "../../assets/projects/motorized-desk/elec_pic.png"
-  - video: "/images/motorized-desk/full_assy.mp4"
-  - video: "/images/motorized-desk/motor_assy.mp4"
+  - video: "../../assets/projects/motorized-desk/full_assy.mp4"
+  - video: "../../assets/projects/motorized-desk/motor_assy.mp4"
   - "../../assets/projects/motorized-desk/gear-ratio-calcs.png"
 ---
 
