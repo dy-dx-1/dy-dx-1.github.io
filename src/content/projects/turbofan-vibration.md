@@ -1,6 +1,7 @@
 ---
 title: "Nonlinear Vibration Analysis Interface"
 description: "A Python desktop interface for exploring the nonlinear dynamics of blade-tip / casing contact in turbofan engines."
+year: "2022-2023"
 category: "Undergraduate Research"
 tags:
   - Python
@@ -11,7 +12,7 @@ tags:
   - Data Visualization
 draft: true
 featured: false
-order: 3
+order: 5
 cover: "../../assets/projects/turbofan-vibration/main.png"
 gallery:
   - video: "../../assets/projects/turbofan-vibration/interface_tour.mp4"

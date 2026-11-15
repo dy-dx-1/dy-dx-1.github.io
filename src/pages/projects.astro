@@ -46,7 +46,10 @@ const projects = await getPublishedProjects();
             </div>
 
             <div class="project-info">
-              <p class="project-category">{project.data.category}</p>
+              <div class="project-meta">
+                <p class="project-category">{project.data.category}</p>
+                {project.data.year && <p class="project-year">{project.data.year}</p>}
+              </div>
               <h2>{project.data.title}</h2>
               <p class="project-description">{project.data.description}</p>
 

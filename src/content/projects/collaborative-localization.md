@@ -2,6 +2,7 @@
 title: "Collaborative Localization"
 description: "Research into decentralized localization using UWB ranging, inertial measurements, and factor-graph optimization."
 category: "Research"
+year: "2026-2027" 
 tags:
   - Python
   - IMU

@@ -34,7 +34,10 @@ const captions = gallery.map(({ caption }) =>
     <a class="back-link" href="/projects">← All projects</a>
 
     <header class="project-header">
-      <p class="project-category">{project.data.category}</p>
+      <div class="project-meta">
+        <p class="project-category">{project.data.category}</p>
+        {project.data.year && <p class="project-year">{project.data.year}</p>}
+      </div>
       <h1>{project.data.title}</h1>
       <p class="project-description">{project.data.description}</p>
 
@@ -173,8 +176,12 @@ const captions = gallery.map(({ caption }) =>
     margin: 0 auto var(--space-5);
   }
 
-  .project-header .project-category {
+  .project-header .project-meta {
     margin-bottom: var(--space-2);
+  }
+
+  .project-header .project-category,
+  .project-header .project-year {
     font-size: var(--text-sm);
   }
 

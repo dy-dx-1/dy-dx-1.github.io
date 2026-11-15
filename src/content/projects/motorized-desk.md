@@ -2,6 +2,7 @@
 title: "Motorized Standing Desk"
 description: "Retrofitting a hand-cranked standing desk with a 3D-printed gear and belt drive, a DC motor, and Arduino-based touch control."
 category: "Personal Project"
+year: "2026"
 tags:
   - Mechanical Design
   - CAD
@@ -11,7 +12,7 @@ tags:
   - Electronics
 draft: true
 featured: false
-order: 4
+order: 3
 cover: "../../assets/projects/motorized-desk/cover.jpg"
 gallery:
   - image: "../../assets/projects/motorized-desk/global.jpg"

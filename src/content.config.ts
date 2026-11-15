@@ -16,6 +16,9 @@ const projects = defineCollection({
       description: z.string(),
       category: z.string(),
       tags: z.array(z.string()).default([]),
+      // Shown next to the category, e.g. 2025 or "2023–2025".
+      // Coerced to text so `year: 2025` (a YAML number) also works.
+      year: z.coerce.string().optional(),
       draft: z.boolean().default(true),
       featured: z.boolean().default(false),
       order: z.number().optional(),

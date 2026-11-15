@@ -2,6 +2,7 @@
 title: "Telescope Cooling System"
 description: "A custom fan and monitoring system designed to improve the thermal performance of a Dobsonian telescope."
 category: "Personal Project"
+year: "2025"
 tags:
   - CAD
   - 3D Printing

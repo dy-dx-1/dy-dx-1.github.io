@@ -2,6 +2,7 @@
 title: "Custom Rover Wheels"
 description: "Four generations of airless, 3D-printed TPU rover wheels with a two-layer damping system and numerically optimized treads."
 category: "PolyOrbite"
+year: "2022-2025"
 tags:
   - Mechanical Design
   - CAD
@@ -11,7 +12,7 @@ tags:
   - Robotics
 draft: true
 featured: false
-order: 5
+order: 4
 cover: "../../assets/projects/rover-wheels/esa_best.jpg"
 gallery:
   - image: "../../assets/projects/rover-wheels/esa_best.jpg"

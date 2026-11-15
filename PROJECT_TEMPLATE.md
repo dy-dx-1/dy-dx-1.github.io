@@ -3,6 +3,7 @@
 title: "Project Title"
 description: "One sentence explaining what the project does."
 category: "Personal Project"
+year: "2023–2025"   # optional; a single year like 2025 also works
 tags:
   - Python
   - Embedded Systems
