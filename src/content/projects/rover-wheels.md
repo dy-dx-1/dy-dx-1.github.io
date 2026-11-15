@@ -1,6 +1,6 @@
 ---
 title: "Custom Rover Wheels"
-description: "Redesigning PolyOrbite's 3D-printed TPU rover wheels with a two-layer damping system and numerically optimized treads."
+description: "Four generations of airless, 3D-printed TPU rover wheels with a two-layer damping system and numerically optimized treads."
 category: "PolyOrbite"
 tags:
   - Mechanical Design
@@ -16,22 +16,29 @@ cover: "../../assets/projects/rover-wheels/esa_best.jpg"
 gallery:
   - "../../assets/projects/rover-wheels/esa_best.jpg"
   - "../../assets/projects/rover-wheels/esa_global.jpg"
-  - "../../assets/projects/rover-wheels/initial_version.jpg"
-  - "../../assets/projects/rover-wheels/middle_age.jpg"
+  - "../../assets/projects/rover-wheels/final_cad.png"
+  - "../../assets/projects/rover-wheels/slicer_full_wheel.png"
+  - "../../assets/projects/rover-wheels/slicer_support_layer.png"
+  - video: "../../assets/projects/rover-wheels/slicer_vid.mp4"
   - "../../assets/projects/rover-wheels/middle_age_on_rover.jpg"
+  - "../../assets/projects/rover-wheels/2023_def.jpg"
+  - "../../assets/projects/rover-wheels/splines_schock.png"
+  - "../../assets/projects/rover-wheels/tread_optimization_plot.png"
+  - "../../assets/projects/rover-wheels/tread_calcs.jpg"
 ---
 
 ## Overview
 
-Over three years with the PolyOrbite rover team, I worked on several generations of the rover's 3D-printed wheels, first as a propulsion team member, then as structure technical lead, and finally as the mechanical consultant leading the redesign. The wheels are printed in 95A TPU and have to deliver traction on loose, rocky terrain while protecting the rims and the rover from impacts.
+I designed the airless, 3D-printed wheels of PolyOrbite's rovers and iterated on them every year from 2021 to 2025. The wheels are printed in 95A TPU and have to grip loose and rocky terrain while protecting the rims and the rover from impacts. The design, analysis, testing, and documentation are my own work.
 
 ## Engineering Highlights
 
-- Designed a two-layer damping system: a soft outer layer that deforms over rocks for traction, and a stiffer inner layer sized to fully compress only under an impact roughly equivalent to the rover falling from 0.4 m.
-- Tuned both layers through FEA and repeated tests on 3D-printed prototypes, and checked the damping behaviour with hand energy calculations before installing the wheels on the rover.
-- Optimized the tread shape numerically: I modelled a tread moving through a granular medium with free-body diagrams, then wrote a Python program that generated thousands of candidate profiles and kept the one that maximized traction.
-- Led the latest redesign, which reduced print time by 27% and wheel mass by 33% while increasing traction.
+- **Two-layer damping.** A soft outer layer deforms around rocks for traction, while a stiffer inner layer of spline-shaped springs only collapses fully under major impacts (roughly the rover dropping from 0.5 m). I tuned the inner layer by spline thickness, using hand energy calculations and drop tests on printed wheel sections.
+- **Numerically optimized treads.** From free-body diagrams of a tread entering, pushing through, and leaving loose soil, I derived a piecewise traction function, then wrote a Python script that searched every combination of trapezoidal tread dimensions for the highest average traction. I settled on 18 treads as a compromise between loose and hard ground.
+- **Questioning my own assumptions.** A year later I ran a sensitivity study on the model's main assumption; the ratio between the two contact forces on a tread. It turned out to be more important than I assumed, so I re-estimated it from the rover's weight and motor torque and updated the tread dimensions.
+- **Fixing what competitions revealed.** The grid infill of the outer layer responded differently depending on load direction, so I moved to gyroid infill for an isotropic response at lower mass. I straightened the treads to cut the load on the suspension during pivot turns, and softened the inner layer after noticing that TPU stiffens with age.
+- **Slotted final design.** Slots around the circumference turn each tread into an independent platform that tilts to match rocks and steps. The mid-section of the wheel uses a lighter infill, which I made printable with slicer modifier meshes and one-layer support grids. The result weighs roughly 500g and prints in about 10h, for comparison, the original wheels weighed 980g and printed in 36h. 
 
 ## Outcome
 
-The wheels have been used on the team's rovers in competition, including tests on simulated lunar terrain.
+The wheels survived every competition season with no shock-related failure on the rover, even after major drops, and the rover climbed steeper slopes each year. The first optimized treads were used at the Canadian Rover Challenge in 2023. In October 2025 the latest wheels drove on simulated lunar regolith at ESA's LUNA facility, during a collaboration with Polytechnique Montréal's MIST Lab and Astrolith. The team never built a test bench to validate the traction model, so I treat it as a principled starting point that field results then supported.
