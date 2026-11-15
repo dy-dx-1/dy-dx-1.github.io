@@ -25,9 +25,7 @@ const projects = await getPublishedProjects();
         // Fall back to the first gallery image when no cover is set.
         const image =
           project.data.cover ??
-          project.data.gallery.find(
-            (item): item is ImageMetadata => !('video' in item),
-          );
+          project.data.gallery.find((item) => 'image' in item)?.image;
 
         return (
           <a class="project-card" href={`/projects/${project.id}`}>

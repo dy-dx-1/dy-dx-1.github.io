@@ -14,12 +14,18 @@ featured: false
 order: 4
 cover: "../../assets/projects/motorized-desk/cover.jpg"
 gallery:
-  - "../../assets/projects/motorized-desk/global.jpg"
+  - image: "../../assets/projects/motorized-desk/global.jpg"
+    caption: "Global view of the drive assembly."
   - video: "../../assets/projects/motorized-desk/run_vertical.mp4"
-  - "../../assets/projects/motorized-desk/elec_pic.png"
+    caption: "Video of the motor running in both directions."
+  - image: "../../assets/projects/motorized-desk/elec_pic.png"
+    caption: "Electronics assembly: Arduino Nano, BTS7960, a protoboard and easily accessible terminals."
   - video: "../../assets/projects/motorized-desk/full_assy.mp4"
+    caption: "Assembly of the drive system into the fixed baseplate with a screw tensioner."
   - video: "../../assets/projects/motorized-desk/motor_assy.mp4"
-  - "../../assets/projects/motorized-desk/gear-ratio-calcs.png"
+    caption: "Assembly of the drive system."
+  - image: "../../assets/projects/motorized-desk/gear-ratio-calcs.png"
+    caption: "Initial gear calculations."
 ---
 
 ## Overview

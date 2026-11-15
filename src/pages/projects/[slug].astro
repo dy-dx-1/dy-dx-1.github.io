@@ -21,6 +21,12 @@ const { title, gallery, cover } = project.data;
 // Main image is at most ~1100px wide on desktop and full width on phones
 const mainWidths = [480, 800, 1100, 1600];
 const mainSizes = '(max-width: 700px) 100vw, 1100px';
+
+// Captions starting with "TODO" are placeholders: visible while developing,
+// hidden on the built site so unfinished text never gets published.
+const captions = gallery.map(({ caption }) =>
+  caption.startsWith('TODO') && !import.meta.env.DEV ? '' : caption,
+);
 ---
 
 <Layout title={project.data.title} description={project.data.description}>
@@ -48,7 +54,8 @@ const mainSizes = '(max-width: 700px) 100vw, 1100px';
                 class="gallery-slide"
                 src={item.video}
                 poster={item.poster?.src}
-                aria-label={`${title} video`}
+                aria-label={captions[index] || `${title} video`}
+                data-caption={captions[index]}
                 muted
                 loop
                 playsinline
@@ -59,10 +66,11 @@ const mainSizes = '(max-width: 700px) 100vw, 1100px';
             ) : (
               <Image
                 class="gallery-slide"
-                src={item}
+                src={item.image}
                 widths={mainWidths}
                 sizes={mainSizes}
-                alt={`${title} image ${index + 1}`}
+                alt={captions[index] || `${title} image ${index + 1}`}
+                data-caption={captions[index]}
                 loading={index === 0 ? 'eager' : 'lazy'}
                 hidden={index !== 0}
               />
@@ -89,6 +97,9 @@ const mainSizes = '(max-width: 700px) 100vw, 1100px';
           )}
         </div>
 
+        {/* Caption of the selected item; the script swaps the text. */}
+        <p class="gallery-caption" aria-live="polite">{captions[0]}</p>
+
         {gallery.length > 1 && (
           <ul class="gallery-thumbs" aria-label="Choose an image">
             {gallery.map((item, index) => (
@@ -108,7 +119,7 @@ const mainSizes = '(max-width: 700px) 100vw, 1100px';
                     )
                   ) : (
                     // 2x the displayed 120px width for high-density screens
-                    <Image src={item} width={240} alt="" />
+                    <Image src={item.image} width={240} alt="" />
                   )}
                   {'video' in item && <span class="gallery-thumb-play" aria-hidden="true">&#9654;</span>}
                 </button>
@@ -225,7 +236,21 @@ const mainSizes = '(max-width: 700px) 100vw, 1100px';
     display: none;
   }
 
+  /* Sits under the main image. The minimum height keeps the text below the
+     gallery from jumping when captions of different lengths swap. */
+  .gallery-caption {
+    grid-column: 1;
+    min-height: 3.2em;
+    margin: 0;
+    color: var(--color-text-muted);
+    font-size: 1rem;
+    line-height: 1.6;
+    text-align: center;
+  }
+
   .gallery-thumbs {
+    grid-column: 2;
+    grid-row: 1;
     display: flex;
     flex-direction: column;
     gap: var(--space-2);
@@ -373,6 +398,8 @@ const mainSizes = '(max-width: 700px) 100vw, 1100px';
     }
 
     .gallery-thumbs {
+      grid-column: auto;
+      grid-row: auto;
       flex-direction: row;
       max-height: none;
       overflow-x: auto;
@@ -406,6 +433,7 @@ const mainSizes = '(max-width: 700px) 100vw, 1100px';
   const thumbs = Array.from(document.querySelectorAll<HTMLButtonElement>('.gallery-thumb'));
   const previous = document.querySelector<HTMLButtonElement>('.gallery-prev');
   const next = document.querySelector<HTMLButtonElement>('.gallery-next');
+  const caption = document.querySelector<HTMLElement>('.gallery-caption');
 
   if (slides.length > 1) {
     let currentIndex = 0;
@@ -422,6 +450,8 @@ const mainSizes = '(max-width: 700px) 100vw, 1100px';
           else slide.pause();
         }
       });
+
+      if (caption) caption.textContent = slides[currentIndex].dataset.caption ?? '';
 
       const thumb = thumbs[currentIndex];
       thumbs.forEach((t) => t.removeAttribute('aria-current'));

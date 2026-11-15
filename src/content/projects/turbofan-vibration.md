@@ -15,11 +15,17 @@ order: 3
 cover: "../../assets/projects/turbofan-vibration/main.png"
 gallery:
   - video: "../../assets/projects/turbofan-vibration/interface_tour.mp4"
-  - "../../assets/projects/turbofan-vibration/main.png"
-  - "../../assets/projects/turbofan-vibration/stab.png"
-  - "../../assets/projects/turbofan-vibration/harm.png"
-  - "../../assets/projects/turbofan-vibration/modal.png"
-  - "../../assets/projects/turbofan-vibration/fourier.png"
+    caption: "General tour of the interface."
+  - image: "../../assets/projects/turbofan-vibration/main.png"
+    caption: "Main page - temporal/frequency analysis."
+  - image: "../../assets/projects/turbofan-vibration/stab.png"
+    caption: "Stability analysis page."
+  - image: "../../assets/projects/turbofan-vibration/harm.png"
+    caption: "2D and 3D harmonics page."
+  - image: "../../assets/projects/turbofan-vibration/modal.png"
+    caption: "3D modal contributions page."
+  - image: "../../assets/projects/turbofan-vibration/fourier.png"
+    caption: "Fourier truncation error page."
 ---
 
 ## Overview

@@ -20,13 +20,20 @@ const projects = defineCollection({
       featured: z.boolean().default(false),
       order: z.number().optional(),
       cover: image().optional(),
+      // Every gallery item needs a caption, shown under the image or video.
+      // A caption starting with "TODO" is a placeholder: it shows in
+      // `npm run dev` but is hidden on the built site.
       gallery: z
         .array(
           z.union([
-            image(),
+            z.object({
+              image: image(),
+              caption: z.string(),
+            }),
             z.object({
               video: z.string(),
               poster: image().optional(),
+              caption: z.string(),
             }),
           ]),
         )

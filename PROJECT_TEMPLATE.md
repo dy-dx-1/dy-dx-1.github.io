@@ -10,8 +10,13 @@ draft: true
 featured: false
 order: 10
 cover: "/images/project-name/cover.jpg"
-gallery: 
- - "PATH_1" 
+# Every gallery item needs a caption (the build fails without one).
+# A caption starting with "TODO" is hidden on the published site.
+gallery:
+  - image: "../../assets/projects/project-name/photo.jpg"
+    caption: "One short sentence saying what this shows."
+  - video: "../../assets/projects/project-name/demo.mp4"
+    caption: "One short sentence saying what this shows."
 ---
 
 ## Overview
