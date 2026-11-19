@@ -1,5 +1,9 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { SHOW_FULL_SITE } from '../site.config';
+
+// Projects-only mode: send visitors straight to the project list.
+if (!SHOW_FULL_SITE) return Astro.redirect('/projects', 301);
 ---
 
 <Layout>

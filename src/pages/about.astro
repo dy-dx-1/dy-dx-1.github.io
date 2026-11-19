@@ -1,5 +1,9 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { SHOW_FULL_SITE } from '../site.config';
+
+// Projects-only mode: the About page isn't published yet.
+if (!SHOW_FULL_SITE) return Astro.redirect('/projects', 301);
 ---
 
 <!-- Placeholder: the full About page is a later step. -->

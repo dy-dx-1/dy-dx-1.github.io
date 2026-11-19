@@ -1,8 +1,13 @@
 ---
+import { SHOW_FULL_SITE } from '../site.config';
+
 const links = [
   { href: '/projects', label: 'Projects' },
-  { href: '/about', label: 'About' },
+  ...(SHOW_FULL_SITE ? [{ href: '/about', label: 'About' }] : []),
 ];
+
+// In projects-only mode the homepage redirects, so link straight to Projects.
+const homeHref = SHOW_FULL_SITE ? '/' : '/projects';
 
 // Treat /projects/some-project as part of the Projects section.
 const currentPath = Astro.url.pathname.replace(/\/$/, '');
@@ -11,7 +16,7 @@ const isCurrent = (href: string) =>
 ---
 
 <header class="site-header container">
-  <a class="wordmark" href="/" aria-label="Home">
+  <a class="wordmark" href={homeHref} aria-label="Home">
     Nicolas<span class="wordmark-period">.</span>
   </a>
 
