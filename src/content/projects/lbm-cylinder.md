@@ -10,7 +10,7 @@ tags:
   - Python
   - Numerical Methods
   - Fluid Dynamics
-draft: true
+draft: false
 featured: false
 order: 7
 cover: "../../assets/projects/lbm-cylinder/streamlines_re3000.png"

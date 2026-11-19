@@ -195,10 +195,6 @@ img {
   text-transform: uppercase;
 }
 
-.wordmark-period {
-  color: var(--color-accent);
-}
-
 /* Project metadata, shared by project cards and project pages */
 .project-category {
   margin-bottom: 0.6rem;

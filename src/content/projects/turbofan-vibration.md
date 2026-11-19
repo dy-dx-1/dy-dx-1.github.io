@@ -10,7 +10,7 @@ tags:
   - Matplotlib
   - Nonlinear Dynamics
   - Data Visualization
-draft: true
+draft: false
 featured: false
 order: 5
 cover: "../../assets/projects/turbofan-vibration/main.png"

@@ -10,7 +10,7 @@ tags:
   - 3D Printing
   - Arduino
   - Electronics
-draft: true
+draft: false
 featured: false
 order: 3
 cover: "../../assets/projects/motorized-desk/cover.jpg"
